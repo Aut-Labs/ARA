@@ -1,3 +1,23 @@
+## Aut Retroactive Attestation Specification
+
+### Should
+
+- Attest any arbitrary onchain action
+- EVM chain agnostic
+- Store and associate attestation conditions with an id (ERC721)
+- Be retroactive (or not, by passing 1 as the cutoff block number for fulfilling mint conditions)
+- Attestation conditions can be retrieved by their content (hash of all requirements and identifiers as ID)
+- Metadata Storage should use the same schema and Ethereum Attestation Service (or similar)
+
+
+### Use (internal)
+- Aut attests an address has executed a certain transaction and mints them an NFT certifying it
+- The NFT will as an onboarding check
+- As a feature: Novae will be able to condition onboarding on the basis of an address having had executed one or more particular onchain transactions.
+
+
+
+
 ## Aut Retroactive Attestation
 
 _____________
