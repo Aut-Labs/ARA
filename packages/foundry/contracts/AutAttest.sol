@@ -39,7 +39,7 @@ contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), 
         if (targetContract.code.length == 0) revert ImmaterialContract();
         attestationBaseID = getBaseID(targetContract, selectedFx, timestampDeadline);
 
-        if (userAttestations[address(uint160(attestationBaseID))][0] == 0) {
+        if (userAttestations[address(uint160(attestationBaseID))].length == 0) {
             Interraction memory I;
             I.contractAddress = targetContract;
             I.selector = selectedFx;
@@ -90,7 +90,9 @@ contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), 
 
     /// @inheritdoc IAutAttest
     function hasMintedAttestationByTarget(address agent, address target, bytes4 selector, uint256 maxBlockCutoff) external view returns (bool) {
-        return (ownerOf( uint256(uint160(bytes20(agent))) + getBaseID( target,  selector,  maxBlockCutoff)) == agent);
+        uint256 id = uint256(uint160(bytes20(agent))) + getBaseID( target,  selector,  maxBlockCutoff);
+        
+        return (_ownerOf(id) == agent);
 
     }
 
