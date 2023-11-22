@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "../contracts/ARA.sol";
+import "../contracts/AutAttest.sol";
 import "./DeployHelpers.s.sol";
 
 contract DeployScript is ScaffoldETHDeploy {
@@ -15,13 +15,8 @@ contract DeployScript is ScaffoldETHDeploy {
             );
         }
         vm.startBroadcast(deployerPrivateKey);
-        ARA A = new ARA();
-        console.logString(
-            string.concat(
-                "ARA deployed at: ",
-                vm.toString(address(A))
-            )
-        );
+        AutAttest A = new AutAttest();
+        console.logString(string.concat("ARA deployed at: ", vm.toString(address(A))));
         vm.stopBroadcast();
 
         /**
