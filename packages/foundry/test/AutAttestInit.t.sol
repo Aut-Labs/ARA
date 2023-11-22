@@ -40,15 +40,17 @@ contract ARATest is Test {
     }
 
 
-
-
     function testHappyPath() public {
+        vm.prank(A0);
+        A.flipGuarded();
+
         vm.prank(A1);
         vm.expectRevert();
         A.addAttestationCondition(address(E20contract), 0, 0xf1f1f2f2, 1, "");
 
         E20contract = new AnERC20Contract();
         if (address(E20contract).code.length == 0) revert("wuuut"); 
+        vm.prank(A0);
         uint256 attestID = A.addAttestationCondition(address(E20contract), 0, 0xa1b1c2d2, 1, "");
 
         vm.prank(A1);
@@ -65,8 +67,6 @@ contract ARATest is Test {
 
         assertTrue(A.hasMintedAttestationByTarget(A2, address(E20contract),0xa1b1c2d2,1), "compute issue");
         assertFalse(A.hasMintedAttestationByTarget(A2, address(E20contract),0xa1b1c2d2,2), "compute issue");
-
-
 
     }
 }

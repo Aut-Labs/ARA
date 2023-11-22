@@ -11,14 +11,13 @@ import {IAutAttest, Interraction} from "./IAutAttest.sol";
 contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), IAutAttest {
     bool public guarded;
 
-
     modifier Guarded() {
         if (guarded) if (msg.sender != owner()) revert Unauthorised();
         _;
     }
 
     function flipGuarded() external {
-        if (msg.sender != owner()) revert Unauthorised();
+        if (msg.sender != (owner())) revert Unauthorised();
         guarded = !guarded;
         emit GuardingStateChanged(guarded);
     }
@@ -39,7 +38,7 @@ contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), 
         if (targetContract.code.length == 0) revert ImmaterialContract();
         attestationBaseID = getBaseID(targetContract, selectedFx, timestampDeadline);
 
-        if (userAttestations[address(uint160(attestationBaseID))].length == 0) {
+        if ((msg.sender == (owner())) || userAttestations[address(uint160(attestationBaseID))].length == 0) {
             Interraction memory I;
             I.contractAddress = targetContract;
             I.selector = selectedFx;

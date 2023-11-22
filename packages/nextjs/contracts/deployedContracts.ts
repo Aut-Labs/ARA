@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     AutAttest: {
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
       abi: [
         {
           inputs: [
@@ -114,6 +114,11 @@ const deployedContracts = {
         },
         {
           inputs: [],
+          name: "ExistsAlready",
+          type: "error",
+        },
+        {
+          inputs: [],
           name: "ImmaterialContract",
           type: "error",
         },
@@ -203,6 +208,25 @@ const deployedContracts = {
           anonymous: false,
           inputs: [
             {
+              indexed: true,
+              internalType: "uint256",
+              name: "attestationBaseID",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "agent",
+              type: "address",
+            },
+          ],
+          name: "FulfillsCondition",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
               indexed: false,
               internalType: "bool",
               name: "",
@@ -214,7 +238,14 @@ const deployedContracts = {
         },
         {
           anonymous: false,
-          inputs: [],
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
           name: "NewAttestationTypeCreated",
           type: "event",
         },
@@ -289,14 +320,19 @@ const deployedContracts = {
               type: "address",
             },
             {
+              internalType: "uint64",
+              name: "timestampDeadline",
+              type: "uint64",
+            },
+            {
               internalType: "bytes4",
               name: "selectedFx",
               type: "bytes4",
             },
             {
-              internalType: "uint64",
-              name: "maxBlockCutoff",
-              type: "uint64",
+              internalType: "uint256",
+              name: "chainID",
+              type: "uint256",
             },
             {
               internalType: "string",
@@ -408,6 +444,52 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "baseID",
+              type: "uint256",
+            },
+          ],
+          name: "getDefinition",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "contractAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "bytes4",
+                  name: "selector",
+                  type: "bytes4",
+                },
+                {
+                  internalType: "uint64",
+                  name: "blockDeadline",
+                  type: "uint64",
+                },
+                {
+                  internalType: "uint256",
+                  name: "chainID",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "metadataURI",
+                  type: "string",
+                },
+              ],
+              internalType: "struct Interraction",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [],
           name: "guarded",
           outputs: [
@@ -452,8 +534,18 @@ const deployedContracts = {
               type: "address",
             },
             {
+              internalType: "address",
+              name: "target",
+              type: "address",
+            },
+            {
+              internalType: "bytes4",
+              name: "selector",
+              type: "bytes4",
+            },
+            {
               internalType: "uint256",
-              name: "attestationInstanceID",
+              name: "maxBlockCutoff",
               type: "uint256",
             },
           ],
@@ -493,6 +585,25 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [
+            {
+              internalType: "uint160",
+              name: "id",
+              type: "uint160",
+            },
+          ],
+          name: "isRegisteredAttestationID",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [],
           name: "name",
           outputs: [
@@ -513,9 +624,9 @@ const deployedContracts = {
               type: "address",
             },
             {
-              internalType: "uint256",
+              internalType: "uint160",
               name: "attestationBaseID",
-              type: "uint256",
+              type: "uint160",
             },
           ],
           name: "onChainAttestFor",
