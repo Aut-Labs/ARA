@@ -24,8 +24,9 @@ contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), 
 
 
     mapping(uint256 baseId => Interraction) interactionFromId;
+    mapping(address => uint256[]) public userAttestations;
 
-    mapping(address => uint256[]) userAttestations;
+
 
     /// @inheritdoc IAutAttest
     function addAttestationCondition(

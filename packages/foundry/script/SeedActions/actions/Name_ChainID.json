@@ -1,0 +1,10 @@
+[{
+    name: "Example Protocol Name",
+    documentation: "Link to protocol documentation page mentioning contract address",
+    imageUrl: "http://imagestore/logo.png",
+    contractAddress: "0x00147BB0253bCfe02c21F01730B5A672d4Fc6816",
+    functionSelector: "balanceOf(address)"
+},
+{}
+
+]
