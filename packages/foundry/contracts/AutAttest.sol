@@ -25,6 +25,8 @@ contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), 
 
     mapping(uint256 baseId => Interraction) interactionFromId;
     mapping(address => uint256[]) public userAttestations;
+    mapping(uint256 => address[]) public attestationUsers;
+    uint256[] public allAttestations;
 
 
 
@@ -48,7 +50,7 @@ contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), 
             I.chainID = chainID;
             interactionFromId[attestationBaseID] = I;
             userAttestations[address(uint160(attestationBaseID))].push(attestationBaseID);
-
+        
             emit NewAttestationTypeCreated(attestationBaseID);
         } else {
             revert ExistsAlready();
@@ -62,6 +64,10 @@ contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), 
         unchecked {
             _mint(agent, uint256(uint160(bytes20(agent))) + attestationBaseID );
         }
+
+        if (attestationUsers[attestationBaseID].length == 0) allAttestations.push(attestationBaseID);
+        attestationUsers[attestationBaseID].push(agent);
+
 
         emit FulfillsCondition(attestationBaseID, agent);
     }
