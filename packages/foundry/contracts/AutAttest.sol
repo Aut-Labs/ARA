@@ -22,13 +22,10 @@ contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), 
         emit GuardingStateChanged(guarded);
     }
 
-
     mapping(uint256 baseId => Interraction) interactionFromId;
     mapping(address => uint256[]) public userAttestations;
     mapping(uint256 => address[]) public attestationUsers;
     uint256[] public allAttestations;
-
-
 
     /// @inheritdoc IAutAttest
     function addAttestationCondition(
@@ -49,8 +46,8 @@ contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), 
             I.metadataURI = metadata;
             I.chainID = chainID;
             interactionFromId[attestationBaseID] = I;
-            userAttestations[address(uint160(attestationBaseID))].push(attestationBaseID);
-        
+            userAttestations[address(uint160(attestationBaseID % 1 ether))].push(attestationBaseID);
+
             emit NewAttestationTypeCreated(attestationBaseID);
         } else {
             revert ExistsAlready();
@@ -58,23 +55,21 @@ contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), 
     }
 
     /// @inheritdoc IAutAttest
-    function onChainAttestFor(address agent, uint160 attestationBaseID) external onlyOwner {
-        if (userAttestations[address(attestationBaseID)].length == 0) revert UndefinedAttestation();
+    function onChainAttestFor(address agent, uint256 attestationBaseID) external onlyOwner {
+        if (!isRegisteredAttestationID(attestationBaseID)) revert UndefinedAttestation();
 
         unchecked {
-            _mint(agent, uint256(uint160(bytes20(agent))) + attestationBaseID );
+            _mint(agent, uint256(uint160(bytes20(agent))) + attestationBaseID);
         }
 
         if (attestationUsers[attestationBaseID].length == 0) allAttestations.push(attestationBaseID);
         attestationUsers[attestationBaseID].push(agent);
 
-
         emit FulfillsCondition(attestationBaseID, agent);
     }
 
     function getBaseID(address target, bytes4 selector, uint256 maxBlockCutoff) public view returns (uint256 id) {
-        id = uint256(uint160(target) / uint256(uint32(selector)));
-        if (maxBlockCutoff > 0) id = id / maxBlockCutoff;
+        id = uint256(keccak256(abi.encodePacked(target, selector, maxBlockCutoff)));
     }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
@@ -90,19 +85,22 @@ contract AutAttest is Ownable(msg.sender), ERC721("Aut Attestation", "AutAtt"), 
     }
 
     /// @inheritdoc IAutAttest
-    function hasMintedAttestationByID(address agent, uint256 attestationInstanceID) external view returns (bool) {
-        return (ownerOf(uint256(uint160(bytes20(agent))) + attestationInstanceID ) == agent);
+    function hasMintedAttestationByID(address agent, uint256 attestationBaseID) external view returns (bool) {
+        return ownerOf(uint256(uint160(bytes20(agent)) + attestationBaseID)) == agent;
     }
 
     /// @inheritdoc IAutAttest
-    function hasMintedAttestationByTarget(address agent, address target, bytes4 selector, uint256 maxBlockCutoff) external view returns (bool) {
-        uint256 id = uint256(uint160(bytes20(agent))) + getBaseID( target,  selector,  maxBlockCutoff);
-        
-        return (_ownerOf(id) == agent);
+    function hasMintedAttestationByTarget(address agent, address target, bytes4 selector, uint256 maxBlockCutoff)
+        external
+        view
+        returns (bool)
+    {
+        uint256 id = uint256(uint160(bytes20(agent))) + getBaseID(target, selector, maxBlockCutoff);
 
+        return (_ownerOf(id) == agent);
     }
 
-    function isRegisteredAttestationID(uint160 id) public view returns (bool) {
-        return userAttestations[address(id)][0] == id;
+    function isRegisteredAttestationID(uint256 id) public view returns (bool) {
+        return userAttestations[address(uint160(id % 1 ether))][0] == id;
     }
 }

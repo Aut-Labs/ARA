@@ -21,14 +21,14 @@ export const menuLinks: HeaderMenuLink[] = [
     icon: <PencilSquareIcon className="h-4 w-4" />
   },
   {
-    label: "Debug Contracts",
-    href: "/debug",
-    icon: <BugAntIcon className="h-4 w-4" />,
-  },
-  {
     label: "Attest",
     href: "/attest",
     icon: <ClipboardDocumentCheckIcon className="h-4 w-4" />,
+  },
+  {
+    label: "Debug Contracts",
+    href: "/debug",
+    icon: <BugAntIcon className="h-4 w-4" />,
   },
 ];
 

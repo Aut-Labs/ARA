@@ -34,15 +34,14 @@ interface IAutAttest is IERC721 {
         bytes4 selectedFx,
         uint256 chainID,
         string memory metadata
-    ) external  returns (uint256 attestationBaseID) ;
-
+    ) external returns (uint256 attestationBaseID);
 
     function getBaseID(address target, bytes4 selector, uint256 maxBlockCutoff) external view returns (uint256 id);
 
     /// @notice mints attestation for a specific agent given an attestation BaseID
     /// @param agent attestation is for
     /// @param attestationBaseID the id of the already preconfigured attestation
-    function onChainAttestFor(address agent, uint160 attestationBaseID) external;
+    function onChainAttestFor(address agent, uint256 attestationBaseID) external;
 
     function getDefinition(uint256 baseID) external view returns (Interraction memory);
 
@@ -50,5 +49,8 @@ interface IAutAttest is IERC721 {
     function hasMintedAttestationByID(address agent, uint256 attestationInstanceID) external view returns (bool);
 
     /// @notice checks if an address as a minted attestation of type attestationInstanceID
-    function hasMintedAttestationByTarget(address agent, address target, bytes4 selector, uint256 maxBlockCutoff) external view returns (bool);
+    function hasMintedAttestationByTarget(address agent, address target, bytes4 selector, uint256 maxBlockCutoff)
+        external
+        view
+        returns (bool);
 }
